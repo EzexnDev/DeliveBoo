@@ -1,0 +1,48 @@
+/**
+ * First we will load all of this project's JavaScript dependencies which
+ * includes Vue and other libraries. It is a great starting point when
+ * building robust, powerful web applications using Vue and Laravel.
+ */
+
+require('./bootstrap');
+import VueRouter from "vue-router";
+
+
+window.Vue = require('vue');
+window.Event = new Vue();
+Vue.use(VueRouter);
+
+
+/**
+ * The following block of code may be used to automatically register your
+ * Vue components. It will recursively scan this directory for the Vue
+ * components and automatically register them with their "basename".
+ *
+ * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+ */
+
+// const files = require.context('./', true, /\.vue$/i)
+// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+
+Vue.component('header-guest-component', require('./components/HeaderGuestComponent.vue').default);
+Vue.component('header-auth-component', require('./components/HeaderAuthComponent.vue').default);
+Vue.component('hero-component', require('./components/HeroComponent.vue').default);
+Vue.component('home-component', require('./components/HomeComponent.vue').default);
+Vue.component('show-component', require('./components/ShowComponent.vue').default);
+
+
+
+/**
+ * Next, we will create a fresh Vue application instance and attach it to
+ * the page. Then, you may begin adding components to this application
+ * or customize the JavaScript scaffolding to fit your unique needs.
+ */
+
+
+// importare lo store nel Vue constructor
+import store from "./store";
+
+new Vue({
+    el: '#app',
+    store: store,
+});

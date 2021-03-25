@@ -1,0 +1,42 @@
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+import Vue from "vue";
+import Vuex from "vuex";
+
+Vue.use(Vuex);
+Vue.use(VueAxios, axios);
+
+export default new Vuex.Store({
+    state: {
+        //query: '',
+        restaurants: [],
+        //showInformation: false,
+        //state: "close"
+    },
+    getters: {
+        restaurants: state=> {
+            return state.restaurants;
+        }
+    },
+    mutations: {
+        SET_Restaurants(state,restaurants) {
+            state.restaurants = restaurants;
+        }
+    },
+    actions: {
+        loadRestaurants({commit}) {
+            this.restaurants = [];
+            axios
+                .get('/api/restaurants', {
+                    params: {
+                        query: 'natus'
+                    }
+                })
+                .then(response => response.data)
+                .then(restaurants => {
+                    console.log(restaurants);
+                    commit('SET_Restaurants',restaurants);
+                });
+            }
+    }
+});

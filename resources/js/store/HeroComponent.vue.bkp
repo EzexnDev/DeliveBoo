@@ -1,0 +1,148 @@
+<template>
+    <div>
+        <div class="hero">
+            <h1>Comodo. Veloce. DeliveBoo.</h1>
+            <h3>Ordina online dai tuoi ristoranti preferiti di Roma</h3>
+            <div class="search-box">
+                <!-- <div>
+                    <i class="fas fa-search"></i>
+                    <input type="text" v-model="query">
+                </div>
+                <button class="search-button" @click="autoComplete()">Trova i ristoranti!</button> -->
+                <label :data-state="state" for="search">
+                    <input type="text" @keypress="autoComplete()" v-model="query" placeholder="Search"
+                        @click="state ='opan'" @blur="state='close'" />
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </label>
+            </div>
+        </div>
+        <transition name="fade">
+            <div class="list" v-if="showInformation == true">
+                <div class="flex-container">
+                    <article id="card" class="card" v-for="item in searchRestaurants" :key="item.id">
+                        <figure class="card-image">
+                            <img :src=" item.imgUrl " alt="" />
+                        </figure>
+
+                        <div class="card-content">
+                            <header class="card-header">
+                                <h2> Nome Ristorante: <a
+                            :href="'restaurants/' + item.id">{{ item.name }}</a></h2>
+
+                                <address>
+                                    <span class="icon-pin" aria-hidden="true"></span>
+                                     {{item.address}}
+                                </address>
+
+                                <span>CloseDay: {{item.closeDay}}</span>
+
+                                <span>Phone: {{item.phone}}</span>
+                            </header>
+
+                            <ul class="card-stats">
+                                <!-- <li>
+                                    <span class="icon-chat" aria-hidden="true"></span>
+                                    <strong>346</strong>
+                                    reviews
+                                </li> -->
+
+                                <li>
+                                    <span class="icon-cuisine" aria-hidden="true"></span>
+                                    <strong>{{item.cuisine_type.length}}</strong>
+                                    Cuisine Type
+                                </li>
+
+                                <li>
+                                    <span class="icon-menu" aria-hidden="true"></span>
+                                    <strong>{{item.menu_items.length}}</strong>
+                                    dishes
+                                </li>
+                            </ul>
+                        </div>
+
+                        <button class="card-button">Menu</button>
+                    </article>
+                </div>
+
+
+
+                <!-- <div v-for="item in restaurants" :key="item.id" class="restaurant-card">
+                    <h3 class="restaurant-title">Nome Ristorante: <a
+                            :href="'restaurants/' + item.id">{{ item.name }}</a> </h3>
+                    <img :src=" item.imgUrl " alt="">
+                    <p>Indirizzo: {{item.address}} Città: {{item.city}}</p>
+                    <p>CloseDay: {{item.closeDay}}</p>
+                    <p>Phone: {{item.phone}}</p>
+                    <p>Info: {{item.shortDescription}}</p>
+                    <div>
+                        <h3>CuisineType:</h3>
+                        <ul>
+                            <li v-bind:key="cuisine.id" v-for="cuisine in item.cuisine_type">
+                                <p>Type: {{cuisine.type}} </p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>MenuItems:</h3>
+                        <ul>
+                            <li v-bind:key="menu.id" v-for="menu in item.menu_items">
+                                <a href="">{{ menu.name }}</a>
+                                <p>Description: {{menu.description}} </p>
+                                <p>Ingrediens: {{menu.ingrediens}} </p>
+                                <p>Price: {{menu.price}}€ </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div> -->
+            </div>
+        </transition>
+    </div>
+</template>
+
+<script>
+import { mapState } from 'vuex';
+
+    export default {
+        data() {
+            return {
+                query: '',
+                searchRestaurants: [],
+               /*  restaurants: [], */
+                showInformation: false,
+                state: "close"
+            }
+        },
+        mounted () {
+            this.$store.dispatch('loadRestaurants');
+        },
+        computed: mapState([
+            'restaurants'
+        ]),
+        methods: {
+            autoComplete() {
+                this.showInformation = true;
+                let regexQuery = new RegExp(this.query,"g");
+
+                console.log(this.restaurants.filter(function(value) {
+                    return value.name.match(regexQuery);
+                }));
+                this.searchRestaurants = this.restaurants.filter(function(value) {
+                    return value.name.match(regexQuery);
+                });
+                /* this.$store.dispatch('loadRestaurants'); */
+                /* this.restaurants = [];
+                axios
+                    .get('/api/restaurants', {
+                        params: {
+                            query: this.query
+                        }
+                    })
+                    .then(response => {
+                        this.restaurants = response.data;
+                        this.showInformation = true;
+                    }); */
+            },
+        },
+    }
+
+</script>
